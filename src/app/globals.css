@@ -128,6 +128,36 @@
 @media(prefers-reduced-motion:reduce){
   .header .nav,.header .nav>a{transition:none!important;transform:none!important;clip-path:none!important}
 }
+@keyframes hero-copy-enter{
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes hero-art-enter{
+  from{opacity:0;transform:translateY(16px) scale(.975)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes header-enter{
+  from{opacity:0;transform:translateY(-10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.header-inner{animation:header-enter .75s 2.36s cubic-bezier(.2,.7,.2,1) both}
+.hero-copy>.overline,.hero-copy>h1,.hero-copy>.hero-sub,.hero-copy>.hero-actions,.hero-copy>.hero-note{
+  animation:hero-copy-enter 1.65s cubic-bezier(.2,.7,.2,1) both;
+}
+.hero-copy>.overline{animation-delay:.08s}
+.hero-copy>h1{animation-delay:.46s}
+.hero-copy>.hero-sub{animation-delay:.84s}
+.hero-copy>.hero-actions{animation-delay:1.22s}
+.hero-copy>.hero-note{animation-delay:1.6s}
+.hero-art{animation:hero-art-enter 1.9s 1.98s cubic-bezier(.2,.7,.2,1) both}
+.mini-window,.float-note{animation:none}
+@media(prefers-reduced-motion:reduce){
+  .header-inner,.hero-copy>.overline,.hero-copy>h1,.hero-copy>.hero-sub,.hero-copy>.hero-actions,.hero-copy>.hero-note,.hero-art{
+    animation:none!important;
+    opacity:1!important;
+    transform:none!important;
+  }
+}
 
 /* Quiet ambient colour: soft, oversized light rather than decorative shapes. */
 .hero{

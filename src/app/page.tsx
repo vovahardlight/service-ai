@@ -189,4 +189,54 @@ function Contact() {
 
 function Footer() { return <footer className="footer"><div className="section-wrap"><div className="footer-main"><div className="footer-brand"><a href="#top" className="brand"><span className="brand-mark"><Workflow size={17}/></span><span>[Company Name]</span></a><p>Custom digital tools, AI solutions, and workflow automation built around your business.</p><span className="footer-region"><span/> Working remotely across Europe</span></div><div className="footer-links"><div><b>Explore</b>{content.nav.map(n=><a key={n.href} href={n.href}>{n.label}</a>)}</div><div><b>Information</b><a href="/privacy-policy">Privacy policy</a><a href="/legal-notice">Legal notice</a><a href="#contact">Send an inquiry</a></div></div></div><div className="footer-bottom"><span>© 2026 [Company Name]. All rights reserved.</span><span className="footer-note">Custom tools. Smarter work. Less routine. <span>✳</span></span></div></div></footer>; }
 
-export default function Home() { return <><Header/><main><Hero/><SolutionsSection/><HowWeWork/><FAQ/><Contact/></main><Footer/></>; }
+function CookieNotice() {
+  const [visible, setVisible] = useState(false);
+  const [configuring, setConfiguring] = useState(false);
+  const [analytics, setAnalytics] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (window.localStorage.getItem("site-cookie-preferences")) return;
+    } catch {
+      // Show the notice if browser storage is unavailable.
+    }
+    const remaining = Math.max(0, 3950 - window.performance.now());
+    const timer = window.setTimeout(() => setVisible(true), remaining);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  function savePreferences(allowAnalytics: boolean) {
+    try {
+      window.localStorage.setItem("site-cookie-preferences", JSON.stringify({ essential: true, analytics: allowAnalytics }));
+    } catch {
+      // The choice still dismisses this notice for the current visit.
+    }
+    setVisible(false);
+  }
+
+  if (!visible) return null;
+  return (
+    <aside className="cookie-notice" role="dialog" aria-label="Cookie preferences">
+      <div className="cookie-copy">
+        <b>Your privacy matters.</b>
+        <p>Essential storage remembers your choice. Optional analytics are currently off.</p>
+        <a href="/privacy-policy">Privacy policy</a>
+      </div>
+      {configuring && (
+        <label className="cookie-analytics">
+          <input type="checkbox" checked={analytics} onChange={(event) => setAnalytics(event.target.checked)} />
+          <span><b>Optional analytics</b><small>Allow anonymous website usage measurement if enabled.</small></span>
+        </label>
+      )}
+      <div className="cookie-actions">
+        <button type="button" onClick={() => savePreferences(true)}>Accept all</button>
+        <button type="button" onClick={() => savePreferences(false)}>Reject all</button>
+        {configuring
+          ? <button type="button" onClick={() => savePreferences(analytics)}>Save choices</button>
+          : <button type="button" onClick={() => setConfiguring(true)}>Configure</button>}
+      </div>
+    </aside>
+  );
+}
+
+export default function Home() { return <><Header/><main><Hero/><SolutionsSection/><HowWeWork/><FAQ/><Contact/></main><Footer/><CookieNotice/></>; }

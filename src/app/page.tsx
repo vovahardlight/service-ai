@@ -13,7 +13,7 @@ function HeaderGlass() {
   const step = 100 / steps;
 
   return <div className="header-glass" aria-hidden="true">{Array.from({ length: steps }, (_, index) => {
-    const blur = index + 1;
+    const blur = index * 0.5;
     const mask = index === 0
       ? `linear-gradient(to top, #000 0%, transparent ${step}%)`
       : index === 1
@@ -92,14 +92,41 @@ function CardVisual({ visual }: { visual: string }) {
   return <div className="custom-visual"><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="custom-core"><Sparkles size={23}/></div><div className="orbit-chip chip-one"><Workflow size={14}/></div><div className="orbit-chip chip-two"><Database size={14}/></div><div className="orbit-chip chip-three"><MessagesSquare size={14}/></div><span className="custom-hint">Your workflow, connected.</span></div>;
 }
 
-function SolutionsSection() { return <section className="section section-solutions" id="solutions"><div className="section-wrap"><div className="section-heading"><Mark>WHAT WE CAN BUILD</Mark><h2>What can we build<br/>for <span>you?</span></h2><p>When software does not fit, routine grows, or systems stay disconnected, we build a practical solution around your workflow.</p></div><div className="bento-grid">{content.solutions.map((s,i)=><article className={`solution-card solution-${s.size} solution-${s.visual}`} key={s.id}><div className="solution-copy"><div className="solution-meta"><span className="icon-box"><Icon name={s.icon}/></span><span className="solution-id">0{i+1} / 06</span></div><div className="solution-text"><h3>{s.headline}</h3><p>{s.text}</p></div></div><CardVisual visual={s.visual}/><div className="solution-foot"><span className="card-category">{s.title}</span>{"cta" in s && s.cta ? <a href="#contact">{s.cta} <ArrowRight size={14}/></a> : <span className="more-link">Explore capability <ArrowUpRight size={14}/></span>}</div></article>)}</div><p className="platform-note">Integrations and publishing capabilities depend on platform APIs, account permissions, and project requirements.</p></div></section>; }
+function SolutionsSection() { return <section className="section section-solutions" id="solutions"><div className="section-wrap"><div className="section-heading"><Mark>WHAT WE CAN BUILD</Mark><h2>What can we build<br/>for <span>you?</span></h2><p>When software does not fit, routine grows, or systems stay disconnected, we build a practical solution around your workflow.</p></div><div className="bento-grid">{content.solutions.map((s,i)=><article className={`solution-card solution-${s.size} solution-${s.visual}`} key={s.id}><div className="solution-copy"><div className="solution-meta"><span className="icon-box"><Icon name={s.icon}/></span><span className="solution-id">0{i+1} / 06</span></div><div className="solution-text"><h3>{s.headline}</h3><p>{s.text}</p></div></div><CardVisual visual={s.visual}/><div className="solution-foot"><span className="card-category">{s.title}</span>{"cta" in s && s.cta ? <a className="solution-cta" href="#contact">{s.cta} <ArrowRight size={14}/></a> : null}</div></article>)}</div><p className="platform-note">Integrations and publishing capabilities depend on platform APIs, account permissions, and project requirements.</p></div></section>; }
 
 
 function HowWeWork() { return <section className="section section-process" id="how-it-works"><div className="section-wrap"><div className="section-heading"><Mark>A CLEAR PATH</Mark><h2>From your problem<br/>to a <span>working solution.</span></h2><p>We understand your workflow, then build the simplest practical solution for the job.</p></div><div className="process-grid">{content.steps.map((s,i)=><article className="process-card" key={s.title}><div className="process-top"><span className="process-icon"><Icon name={s.icon}/></span><span className="index">0{i+1}</span></div><h3>{s.title}</h3><p>{s.text}</p><ul>{s.list.map(x=><li key={x}><Check size={13}/>{x}</li>)}</ul></article>)}</div><div className="mvp-note"><span className="mvp-icon"><Sparkles size={18}/></span><div><b>Start with an MVP. Expand when you need more.</b><span>Scope, deliverables, cost, and timing are agreed after understanding the project.</span></div><ArrowRight size={18}/></div></div></section>; }
 
 
 
-function FAQ() { const [open,setOpen]=useState<number|null>(0); return <section className="section section-faq" id="faq"><div className="section-wrap faq-layout"><div className="section-heading"><Mark>GOOD TO KNOW</Mark><h2>Frequently<br/>asked <span>questions.</span></h2><p>A few useful details before we start a conversation.</p><a className="button button-outline" href="#contact">Ask us directly <ArrowRight size={15}/></a></div><div className="faq-list">{content.faqs.map(([q,a],i)=><article key={q} className={open===i?"faq-item faq-open":"faq-item"}><button onClick={()=>setOpen(open===i?null:i)} aria-expanded={open===i}><span>{q}</span><span className="faq-plus"><ChevronDown size={17}/></span></button><div className="faq-answer"><p>{a}</p></div></article>)}</div></div></section>; }
+function FAQ() {
+  const [open, setOpen] = useState<number | null>(0);
+  const askLink = <a className="button button-outline" href="#contact">Ask us directly <ArrowRight size={15} /></a>;
+
+  return (
+    <section className="section section-faq" id="faq">
+      <div className="section-wrap faq-layout">
+        <div className="section-heading">
+          <Mark>GOOD TO KNOW</Mark>
+          <h2>Frequently<br />asked <span>questions.</span></h2>
+          <p>A few useful details before we start a conversation.</p>
+          <span className="faq-ask-desktop">{askLink}</span>
+        </div>
+        <div className="faq-list">
+          {content.faqs.map(([q, a], i) => (
+            <article key={q} className={open === i ? "faq-item faq-open" : "faq-item"}>
+              <button onClick={() => setOpen(open === i ? null : i)} aria-expanded={open === i}>
+                <span>{q}</span><span className="faq-plus"><ChevronDown size={17} /></span>
+              </button>
+              <div className="faq-answer"><p>{a}</p></div>
+            </article>
+          ))}
+        </div>
+        <span className="faq-ask-mobile">{askLink}</span>
+      </div>
+    </section>
+  );
+}
 
 function WhatsAppMark() {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.198-.347.223-.644.075-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.372-.025-.521-.075-.149-.669-1.611-.916-2.206-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.875 1.213 3.074c.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.999-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.002-5.45 4.438-9.884 9.893-9.884 2.64.001 5.122 1.03 6.987 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.44 9.884-9.89 9.884M20.52 3.48A11.82 11.82 0 0 0 12.05 0C5.495 0 .16 5.334.157 11.89c0 2.096.547 4.142 1.588 5.946L.05 24l6.312-1.656a11.9 11.9 0 0 0 5.684 1.448h.005c6.554 0 11.89-5.334 11.893-11.89a11.82 11.82 0 0 0-3.425-8.422z"/></svg>;

@@ -101,7 +101,6 @@ function HowWeWork() { return <section className="section section-process" id="h
 
 function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
-  const askLink = <a className="button button-outline" href="#contact">Ask us directly <ArrowRight size={15} /></a>;
 
   return (
     <section className="section section-faq" id="faq">
@@ -110,7 +109,6 @@ function FAQ() {
           <Mark>GOOD TO KNOW</Mark>
           <h2>Frequently<br />asked <span>questions.</span></h2>
           <p>A few useful details before we start a conversation.</p>
-          <span className="faq-ask-desktop">{askLink}</span>
         </div>
         <div className="faq-list">
           {content.faqs.map(([q, a], i) => (
@@ -122,7 +120,6 @@ function FAQ() {
             </article>
           ))}
         </div>
-        <span className="faq-ask-mobile">{askLink}</span>
       </div>
     </section>
   );

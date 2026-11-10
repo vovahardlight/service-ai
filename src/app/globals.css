@@ -4529,7 +4529,7 @@ p {
   }
 
   .hero-copy>h1.title-ready {
-    animation: mobile-title-fade .65s ease both
+    animation: mobile-title-fade 1.1s cubic-bezier(.4, 0, .2, 1) both
   }
 }
 

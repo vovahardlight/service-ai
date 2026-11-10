@@ -87,19 +87,16 @@ function Hero() {
     const title = titleRef.current;
     if (!title) return;
     const measure = () => {
-      const previousAnimation = title.style.animation;
-      const previousTransform = title.style.transform;
-      const previousTranslate = title.style.translate;
-      title.style.animation = "none";
-      title.style.transform = "none";
-      title.style.translate = "none";
-      const rect = title.getBoundingClientRect();
-      const centerDelta = window.innerWidth / 2 - (rect.left + rect.width / 2) + window.innerWidth * 0.10;
+      let layoutLeft = 0;
+      let node: HTMLElement | null = title;
+      while (node) {
+        layoutLeft += node.offsetLeft;
+        node = node.offsetParent as HTMLElement | null;
+      }
+      layoutLeft -= window.scrollX;
+      const centerDelta = window.innerWidth / 2 - (layoutLeft + title.offsetWidth / 2) + window.innerWidth * 0.10;
       const startScale = Number.parseFloat(getComputedStyle(title).getPropertyValue("--title-start-scale")) || 1.35;
       title.style.setProperty("--title-center-shift", `${centerDelta / startScale}px`);
-      title.style.animation = previousAnimation;
-      title.style.transform = previousTransform;
-      title.style.translate = previousTranslate;
     };
     measure();
     setTitleReady(true);

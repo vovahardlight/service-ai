@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowRight, ArrowUpRight, Bot, Check, ChevronDown, CircleCheck, Code2, Command, Database, FileText, Layers3, Link2, Mail, Menu, MessagesSquare, Play, Repeat2, ScanSearch, Search, Send, Sparkles, Workflow, X, type LucideIcon } from "lucide-react";
 import { content } from "@/content/en";
 
@@ -80,7 +80,34 @@ function HeroVisual() {
   return <div className="hero-art" aria-label="Static sample workflow dashboard"><div className="art-glow"/><div className="mini-window"><div className="window-top"><div className="window-brand"><span className="window-logo"><Workflow size={14}/></span><span>workflows</span></div><span className="sample-pill"><i/> DEMO · SAMPLE DATA</span><span className="avatar">A</span></div><div className="window-body"><aside className="mini-sidebar"><span className="side-active"><Layers3 size={15}/></span><span><Command size={15}/></span><span><Database size={15}/></span><span><MessagesSquare size={15}/></span></aside><div className="mini-main"><div className="mini-heading"><div><span className="eyebrow-small">WORKFLOW OVERVIEW</span><h3>Lead Processing</h3></div><span className="status-live"><i/> Completed</span></div><div className="mini-content"><div className="task-list">{["Business discovery", "Website analysis", "Data processing", "Lead qualification", "CRM synchronization"].map((x,i)=><div className="task" key={x}><span className="task-check"><Check size={12}/></span><span>{x}</span><small>{i===4 ? "just now" : `${i+1}m ago`}</small></div>)}</div><div className="result-card"><div className="result-top"><span>Records processed</span><span className="result-icon"><Database size={15}/></span></div><strong>42</strong><span>illustrative sample records</span><div className="bar-row"><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/></div><div className="result-foot"><span>Workflow run</span><b>Complete <Check size={12}/></b></div></div></div><div className="mini-footer"><span><span className="tiny-pulse"/> Last run · Sample environment</span><span>View workflow <ArrowUpRight size={12}/></span></div></div></div></div><div className="float-note"><span className="float-icon"><Sparkles size={17}/></span><span><strong>Less routine</strong><small>More time for meaningful work</small></span></div><div className="art-caption">A static product-style illustration · Sample data only</div></div>;
 }
 
-function Hero() { return <section className="hero section-wrap" id="top"><div className="hero-copy"><div className="overline"><span/> CUSTOM SOFTWARE · AI · AUTOMATION</div><h1>Custom tools for the work your <em>software can't handle.</em></h1><p className="hero-sub">We build custom AI-powered tools, automations, and software integrations that eliminate repetitive work, connect your systems, and simplify complex workflows.</p><div className="hero-actions"><a className="button button-primary" href="#contact">Tell us what you need <ArrowRight size={17}/></a><a className="button button-quiet" href="#solutions">Explore solutions <ArrowDown size={16}/></a></div><p className="hero-note"><span className="note-spark"><Sparkles size={14}/></span> From one automated task to a digital system built around your business.</p></div><HeroVisual/></section>; }
+function Hero() {
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const [titleReady, setTitleReady] = useState(false);
+  useLayoutEffect(() => {
+    const title = titleRef.current;
+    if (!title) return;
+    const measure = () => {
+      const previousAnimation = title.style.animation;
+      const previousTransform = title.style.transform;
+      const previousTranslate = title.style.translate;
+      title.style.animation = "none";
+      title.style.transform = "none";
+      title.style.translate = "none";
+      const rect = title.getBoundingClientRect();
+      const centerDelta = window.innerWidth / 2 - (rect.left + rect.width / 2) + window.innerWidth * 0.10;
+      const startScale = Number.parseFloat(getComputedStyle(title).getPropertyValue("--title-start-scale")) || 1.35;
+      title.style.setProperty("--title-center-shift", `${centerDelta / startScale}px`);
+      title.style.animation = previousAnimation;
+      title.style.transform = previousTransform;
+      title.style.translate = previousTranslate;
+    };
+    measure();
+    setTitleReady(true);
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+  return <section className="hero section-wrap" id="top"><div className="hero-copy"><div className="overline"><span/> CUSTOM SOFTWARE · AI · AUTOMATION</div><h1 ref={titleRef} className={titleReady ? "title-ready" : "title-pending"}>Custom tools for the work your <em>software can't handle.</em></h1><p className="hero-sub">We build custom AI-powered tools, automations, and software integrations that eliminate repetitive work, connect your systems, and simplify complex workflows.</p><div className="hero-actions"><a className="button button-primary" href="#contact">Tell us what you need <ArrowRight size={17}/></a><a className="button button-quiet" href="#solutions">Explore solutions <ArrowDown size={16}/></a></div></div><HeroVisual/></section>;
+}
 
 
 function CardVisual({ visual }: { visual: string }) {

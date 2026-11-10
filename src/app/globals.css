@@ -4525,7 +4525,10 @@ p {
 @media(max-width:760px) {
   .hero-copy>h1 {
     --title-start-scale: 1;
-    --title-start-z: 0px
+    --title-start-z: 0px;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0)
   }
 
   .hero-copy>h1.title-ready {

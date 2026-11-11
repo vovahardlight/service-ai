@@ -180,6 +180,9 @@ function ContactSpray() {
         varying vec2 vUv;
         uniform float uTime;
         uniform float uPad;
+        vec3 srgbToLinear(vec3 c){
+          return mix(c/12.92,pow((c+.055)/1.055,vec3(2.4)),step(vec3(.04045),c));
+        }
         vec2 gradient(vec2 cell){
           float angle=6.2831853*fract(sin(dot(cell,vec2(127.1,311.7)))*43758.5453);
           return vec2(cos(angle),sin(angle));
@@ -206,13 +209,14 @@ function ContactSpray() {
           float broad=pnoise(p)*.065*sideFade;
           float grain=pnoise(p*12.0)*.004*sideFade;
           float coverage=smoothstep(-.14,.18,edge+broad+grain);
-          float field=pnoise(vec2(vUv.x,sectionY)*vec2(18.,12.)+warp*1.8+vec2(uTime*.03,-uTime*.02))*.012;
-          vec3 topEdge=vec3(.9608,.9608,.9686);
-          vec3 bottomEdge=vec3(.9686,.9686,.9765);
+          vec3 topEdge=srgbToLinear(vec3(245.,245.,247.)/255.);
+          vec3 bottomEdge=srgbToLinear(vec3(247.,247.,249.)/255.);
           vec3 edgeColor=mix(bottomEdge,topEdge,side);
-          vec3 color=mix(edgeColor,vec3(.0588,.153,.267),coverage)+field*vec3(.55,.7,1.)*smoothstep(0.,.035,edge);
+          vec3 brandBlue=srgbToLinear(vec3(41.,151.,255.)/255.);
+          vec3 color=mix(edgeColor,brandBlue,coverage);
           float outerFade=smoothstep(0.,.045,min(vUv.y,1.-vUv.y));
           gl_FragColor=vec4(color,outerFade);
+          #include <colorspace_fragment>
         }
       `,
     });

@@ -136,9 +136,9 @@ button {
 }
 
 .nav-cta:hover {
-  background: var(--ink);
+  background: var(--light-blue);
   color: white;
-  border-color: var(--ink)
+  border-color: var(--light-blue)
 }
 
 .mobile-toggle {
@@ -2365,11 +2365,11 @@ p {
 }
 
 .faq-list {
-  border-top: 1px solid #e4e4e9
+  border-top: 0
 }
 
 .faq-item {
-  border-bottom: 1px solid #e4e4e9
+  border-bottom: 1px solid #D2D2D7
 }
 
 .faq-item>button {
@@ -4066,8 +4066,8 @@ p {
 }
 
 .nav-cta:hover {
-  background: #0F2744;
-  border-color: #0F2744
+  background: #2997FF;
+  border-color: #2997FF
 }
 
 .overline>span {
@@ -4165,9 +4165,21 @@ p {
 }
 
 .header-dark .nav-cta:hover {
-  background: #FFFFFF;
-  border-color: #FFFFFF;
-  color: #0F2744
+  background-color: #2997FF !important;
+  border-color: #2997FF !important;
+  color: #FFFFFF !important
+}
+
+.header .nav .nav-cta:hover {
+  background-color: #2997FF !important;
+  border-color: #2997FF !important;
+  color: #FFFFFF !important
+}
+
+.hero a[href="#contact"].button-primary:hover {
+  background-color: #2997FF !important;
+  border-color: #2997FF !important;
+  color: #FFFFFF !important
 }
 
 .header-dark .nav-cta svg {

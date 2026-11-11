@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowRight, ArrowUpRight, Bot, Check, ChevronDown, CircleCheck, Code2, Command, Database, FileText, Layers3, Link2, Mail, Menu, MessagesSquare, Play, Repeat2, ScanSearch, Search, Send, Sparkles, Workflow, X, type LucideIcon } from "lucide-react";
 import { content } from "@/content/en";
+import * as THREE from "three";
 
 const iconMap: Record<string, LucideIcon> = { layers: Layers3, repeat: Repeat2, link: Link2, "scan-search": ScanSearch, clapperboard: Play, "messages-square": MessagesSquare, "briefcase-business": Command, "database-zap": Database, sparkles: Sparkles, search: Search, "list-checks": CircleCheck, send: Send, "clipboard-list": FileText, "code-xml": Code2, rocket: ArrowUpRight };
 function Icon({ name, size = 20 }: { name: string; size?: number }) { const I = iconMap[name] || Workflow; return <I size={size} strokeWidth={1.65} aria-hidden="true" />; }
@@ -153,6 +154,96 @@ function WhatsAppMark() {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.198-.347.223-.644.075-.297-.149-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.372-.025-.521-.075-.149-.669-1.611-.916-2.206-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.875 1.213 3.074c.149.198 2.095 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.999-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.002-5.45 4.438-9.884 9.893-9.884 2.64.001 5.122 1.03 6.987 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.44 9.884-9.89 9.884M20.52 3.48A11.82 11.82 0 0 0 12.05 0C5.495 0 .16 5.334.157 11.89c0 2.096.547 4.142 1.588 5.946L.05 24l6.312-1.656a11.9 11.9 0 0 0 5.684 1.448h.005c6.554 0 11.89-5.334 11.893-11.89a11.82 11.82 0 0 0-3.425-8.422z"/></svg>;
 }
 
+function ContactSpray() {
+  const hostRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "low-power" });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setSize(host.clientWidth, host.clientHeight + 80);
+    renderer.setClearColor(0x000000, 0);
+    renderer.domElement.className = "contact-spray-canvas";
+    host.appendChild(renderer.domElement);
+    const uniforms = {
+      uResolution: { value: new THREE.Vector2(host.clientWidth, host.clientHeight + 80) },
+      uTime: { value: 0 },
+      uPad: { value: 40 / (host.clientHeight + 80) },
+    };
+    const material = new THREE.ShaderMaterial({
+      transparent: true,
+      depthTest: false,
+      depthWrite: false,
+      uniforms,
+      vertexShader: `varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position.xy,0.0,1.0); }`,
+      fragmentShader: `
+        varying vec2 vUv;
+        uniform float uTime;
+        uniform float uPad;
+        vec2 gradient(vec2 cell){
+          float angle=6.2831853*fract(sin(dot(cell,vec2(127.1,311.7)))*43758.5453);
+          return vec2(cos(angle),sin(angle));
+        }
+        float pnoise(vec2 p){
+          vec2 cell=floor(p), f=fract(p);
+          vec2 u=f*f*f*(f*(f*6.-15.)+10.);
+          float a=dot(gradient(cell),f);
+          float b=dot(gradient(cell+vec2(1.,0.)),f-vec2(1.,0.));
+          float c=dot(gradient(cell+vec2(0.,1.)),f-vec2(0.,1.));
+          float d=dot(gradient(cell+vec2(1.,1.)),f-vec2(1.,1.));
+          return mix(mix(a,b,u.x),mix(c,d,u.x),u.y)*1.65;
+        }
+        void main(){
+          float sectionY=(vUv.y-uPad)/(1.-2.*uPad);
+          float edge=min(sectionY,1.-sectionY);
+          float side=step(.5,sectionY);
+          vec2 warp=vec2(
+            pnoise(vec2(vUv.x,sectionY)*vec2(3.1,5.2)+vec2(uTime*.085,-uTime*.055)),
+            pnoise(vec2(vUv.x,sectionY)*vec2(4.7,2.9)+vec2(-uTime*.045,uTime*.07))
+          );
+          vec2 p=vec2(vUv.x*2.6,edge*11.)+warp*.7+vec2(uTime*.06,uTime*.03)+side*vec2(13.7,29.3);
+          float sideFade=smoothstep(0.,.08,vUv.x)*(1.-smoothstep(.92,1.,vUv.x));
+          float broad=pnoise(p)*.065*sideFade;
+          float grain=pnoise(p*12.0)*.004*sideFade;
+          float coverage=smoothstep(-.14,.18,edge+broad+grain);
+          float field=pnoise(vec2(vUv.x,sectionY)*vec2(18.,12.)+warp*1.8+vec2(uTime*.03,-uTime*.02))*.012;
+          vec3 topEdge=vec3(.9608,.9608,.9686);
+          vec3 bottomEdge=vec3(.9686,.9686,.9765);
+          vec3 edgeColor=mix(bottomEdge,topEdge,side);
+          vec3 color=mix(edgeColor,vec3(.0588,.153,.267),coverage)+field*vec3(.55,.7,1.)*smoothstep(0.,.035,edge);
+          float outerFade=smoothstep(0.,.045,min(vUv.y,1.-vUv.y));
+          gl_FragColor=vec4(color,outerFade);
+        }
+      `,
+    });
+    const scene = new THREE.Scene();
+    const camera = new THREE.Camera();
+    const geometry = new THREE.PlaneGeometry(2, 2);
+    scene.add(new THREE.Mesh(geometry, material));
+    const clock = new THREE.Clock();
+    let frame = 0;
+    const animate = () => {
+      uniforms.uTime.value = clock.getElapsedTime();
+      renderer.render(scene, camera);
+      frame = requestAnimationFrame(animate);
+    };
+    animate();
+    const resize = () => {
+      const height = host.clientHeight + 80;
+      uniforms.uResolution.value.set(host.clientWidth, height);
+      uniforms.uPad.value = 40 / height;
+      renderer.setSize(host.clientWidth, height);
+      renderer.render(scene, camera);
+    };
+    const observer = new ResizeObserver(resize);
+    observer.observe(host);
+    return () => {
+      observer.disconnect(); cancelAnimationFrame(frame); geometry.dispose(); material.dispose(); renderer.dispose(); renderer.domElement.remove();
+    };
+  }, []);
+  return <div className="contact-spray" ref={hostRef} aria-hidden="true" />;
+}
+
 function Contact() {
   const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER?.replace(/\D/g, "");
   const [emailFormOpen, setEmailFormOpen] = useState(false);
@@ -182,6 +273,7 @@ function Contact() {
 
   return (
     <section className="section section-contact" id="contact">
+      <ContactSpray />
       <div className="section-wrap">
         <div className="contact-simple">
           <Mark>CONTACT</Mark>

@@ -58,7 +58,7 @@ function Header() {
         const header = headerRef.current;
         if (!header) return;
         const midline = header.getBoundingClientRect().height / 2;
-        const overDarkSection = Array.from(document.querySelectorAll(".section-workflow, .section-contact")).some((section) => {
+        const overDarkSection = Array.from(document.querySelectorAll(".section-workflow")).some((section) => {
           const bounds = section.getBoundingClientRect();
           return bounds.top <= midline && bounds.bottom > midline;
         });
@@ -78,7 +78,7 @@ function Header() {
 }
 
 function HeroVisual() {
-  return <div className="hero-art" aria-label="Static sample workflow dashboard"><div className="art-glow"/><div className="mini-window"><div className="window-top"><div className="window-brand"><span className="window-logo"><Workflow size={14}/></span><span>workflows</span></div><span className="sample-pill"><i/> DEMO · SAMPLE DATA</span><span className="avatar">A</span></div><div className="window-body"><aside className="mini-sidebar"><span className="side-active"><Layers3 size={15}/></span><span><Command size={15}/></span><span><Database size={15}/></span><span><MessagesSquare size={15}/></span></aside><div className="mini-main"><div className="mini-heading"><div><span className="eyebrow-small">WORKFLOW OVERVIEW</span><h3>Lead Processing</h3></div><span className="status-live"><i/> Completed</span></div><div className="mini-content"><div className="task-list">{["Business discovery", "Website analysis", "Data processing", "Lead qualification", "CRM synchronization"].map((x,i)=><div className="task" key={x}><span className="task-check"><Check size={12}/></span><span>{x}</span><small>{i===4 ? "just now" : `${i+1}m ago`}</small></div>)}</div><div className="result-card"><div className="result-top"><span>Records processed</span><span className="result-icon"><Database size={15}/></span></div><strong>42</strong><span>illustrative sample records</span><div className="bar-row"><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/></div><div className="result-foot"><span>Workflow run</span><b>Complete <Check size={12}/></b></div></div></div><div className="mini-footer"><span><span className="tiny-pulse"/> Last run · Sample environment</span><span>View workflow <ArrowUpRight size={12}/></span></div></div></div></div><div className="float-note"><span className="float-icon"><Sparkles size={17}/></span><span><strong>Less routine</strong><small>More time for meaningful work</small></span></div><div className="art-caption">A static product-style illustration · Sample data only</div></div>;
+  return <div className="hero-art" aria-label="Static sample workflow dashboard"><div className="art-glow"/><div className="mini-window"><div className="window-top"><div className="window-brand"><span className="window-logo"><Workflow size={14}/></span><span>workflows</span></div><span className="sample-pill"><i/> DEMO · SAMPLE DATA</span><span className="avatar">A</span></div><div className="window-body"><aside className="mini-sidebar"><span className="side-active"><Layers3 size={15}/></span><span><Command size={15}/></span><span><Database size={15}/></span><span><MessagesSquare size={15}/></span></aside><div className="mini-main"><div className="mini-heading"><div><span className="eyebrow-small">WORKFLOW OVERVIEW</span><h3>Lead Processing</h3></div><span className="status-live"><i/> Completed</span></div><div className="mini-content"><div className="task-list">{["Business discovery", "Website analysis", "Data processing", "Lead qualification", "CRM synchronization"].map((x,i)=><div className="task" key={x}><span className="task-check"><Check size={12}/></span><span>{x}</span><small>{i===4 ? "just now" : `${i+1}m ago`}</small></div>)}</div><div className="result-card"><div className="result-top"><span>Records processed</span><span className="result-icon"><Database size={15}/></span></div><strong>42</strong><span>illustrative sample records</span><div className="bar-row"><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/></div><div className="result-foot"><span>Workflow run</span><b>Complete <Check size={12}/></b></div></div></div><div className="mini-footer"><span><span className="tiny-pulse"/> Last run · Sample environment</span><span>View workflow <ArrowUpRight size={12}/></span></div></div></div></div><div className="float-note"><span className="float-icon"><Sparkles size={17}/></span><span><strong>Less routine</strong><small>More time for meaningful work</small></span></div><div className="art-caption">Illustrative workflow interface</div></div>;
 }
 
 function Hero() {
@@ -104,7 +104,7 @@ function Hero() {
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
   }, []);
-  return <section className="hero section-wrap" id="top"><div className="hero-copy"><div className="overline"><span/> CUSTOM SOFTWARE · AI · AUTOMATION</div><h1 ref={titleRef} className={titleReady ? "title-ready" : "title-pending"}>Custom tools for the work your <em>software can't handle.</em></h1><p className="hero-sub">We build custom AI-powered tools, automations, and software integrations that eliminate repetitive work, connect your systems, and simplify complex workflows.</p><div className="hero-actions"><a className="button button-primary" href="#contact">Tell us what you need <ArrowRight size={17}/></a><a className="button button-quiet" href="#solutions">Explore solutions <ArrowDown size={16}/></a></div></div><HeroVisual/></section>;
+  return <section className="hero section-wrap" id="top"><div className="hero-copy"><div className="overline">CUSTOM SOFTWARE · AI · AUTOMATION</div><h1 ref={titleRef} className={titleReady ? "title-ready" : "title-pending"}>Custom tools for the work your <em>software can't handle.</em></h1><p className="hero-sub">We build custom AI-powered tools, automations, and software integrations that eliminate repetitive work, connect your systems, and simplify complex workflows.</p><div className="hero-actions"><a className="button button-primary" href="#contact">Tell us what you need <ArrowRight size={17}/></a><a className="button button-quiet" href="#solutions">Explore solutions <ArrowDown size={16}/></a></div></div><HeroVisual/></section>;
 }
 
 
@@ -168,6 +168,7 @@ function ContactSpray() {
     const uniforms = {
       uResolution: { value: new THREE.Vector2(host.clientWidth, host.clientHeight + 80) },
       uTime: { value: 0 },
+      uSpeed: { value: window.matchMedia("(max-width: 760px)").matches ? 1.8 : 1.0 },
       uPad: { value: 40 / (host.clientHeight + 80) },
     };
     const material = new THREE.ShaderMaterial({
@@ -179,6 +180,7 @@ function ContactSpray() {
       fragmentShader: `
         varying vec2 vUv;
         uniform float uTime;
+        uniform float uSpeed;
         uniform float uPad;
         vec3 srgbToLinear(vec3 c){
           return mix(c/12.92,pow((c+.055)/1.055,vec3(2.4)),step(vec3(.04045),c));
@@ -197,14 +199,15 @@ function ContactSpray() {
           return mix(mix(a,b,u.x),mix(c,d,u.x),u.y)*1.65;
         }
         void main(){
+          float time=uTime*uSpeed;
           float sectionY=(vUv.y-uPad)/(1.-2.*uPad);
           float edge=min(sectionY,1.-sectionY);
           float side=step(.5,sectionY);
           vec2 warp=vec2(
-            pnoise(vec2(vUv.x,sectionY)*vec2(3.1,5.2)+vec2(uTime*.085,-uTime*.055)),
-            pnoise(vec2(vUv.x,sectionY)*vec2(4.7,2.9)+vec2(-uTime*.045,uTime*.07))
+            pnoise(vec2(vUv.x,sectionY)*vec2(3.1,5.2)+vec2(time*.085,-time*.055)),
+            pnoise(vec2(vUv.x,sectionY)*vec2(4.7,2.9)+vec2(-time*.045,time*.07))
           );
-          vec2 p=vec2(vUv.x*2.6,edge*11.)+warp*.7+vec2(uTime*.06,uTime*.03)+side*vec2(13.7,29.3);
+          vec2 p=vec2(vUv.x*2.6,edge*11.)+warp*.7+vec2(time*.06,time*.03)+side*vec2(13.7,29.3);
           float sideFade=smoothstep(0.,.08,vUv.x)*(1.-smoothstep(.92,1.,vUv.x));
           float broad=pnoise(p)*.065*sideFade;
           float grain=pnoise(p*12.0)*.004*sideFade;
@@ -234,6 +237,7 @@ function ContactSpray() {
     animate();
     const resize = () => {
       const height = host.clientHeight + 80;
+      uniforms.uSpeed.value = window.matchMedia("(max-width: 760px)").matches ? 1.8 : 1.0;
       uniforms.uResolution.value.set(host.clientWidth, height);
       uniforms.uPad.value = 40 / height;
       renderer.setSize(host.clientWidth, height);
@@ -292,7 +296,7 @@ function Contact() {
               aria-disabled={!whatsapp}
             >
               <span className="contact-action-icon whatsapp-icon"><WhatsAppMark /></span>
-              <span><b>WhatsApp</b><small>{whatsapp ? "Open a chat" : "Add number in .env.local"}</small></span>
+              <span><b>WhatsApp</b><small>{whatsapp ? "Open a chat" : "Currently unavailable"}</small></span>
               <ArrowUpRight size={17} />
             </a>
             <button

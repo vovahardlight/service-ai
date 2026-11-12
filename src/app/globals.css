@@ -165,18 +165,11 @@ button {
   display: flex;
   gap: 9px;
   align-items: center;
+  text-decoration-line: none;
   color: #73737b;
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 1.6px
-}
-
-.overline>span {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--blue);
-  box-shadow: 0 0 0 4px rgba(8, 117, 223, .1)
 }
 
 h1,
@@ -2970,6 +2963,7 @@ p {
   }
 }
 
+
 @media(max-width:1000px) {
   .section-wrap {
     width: calc(100% - 60px)
@@ -4068,10 +4062,6 @@ p {
 .nav-cta:hover {
   background: #2997FF;
   border-color: #2997FF
-}
-
-.overline>span {
-  background: #0071E3
 }
 
 .icon-box,
@@ -5277,5 +5267,176 @@ p {
     opacity: 1 !important;
     transform: none !important;
     clip-path: none !important
+  }
+}
+
+/* Layout refinements based on the visual audit */
+.section-process {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  box-sizing: border-box
+}
+
+.hero {
+  min-height: calc(100vh - 66px);
+  min-height: calc(100svh - 66px)
+}
+
+.header-inner {
+  width: min(1200px, calc(100% - 96px))
+}
+
+.mvp-note {
+  width: 100%;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto
+}
+
+.section-faq {
+  padding-bottom: clamp(64px, 7vw, 88px)
+}
+
+.contact-simple .mark {
+  border-color: rgba(15, 39, 68, .22);
+  color: #0F2744;
+  background: rgba(255, 255, 255, .28)
+}
+
+.contact-simple h2,
+.contact-simple h2 span,
+.contact-simple>p {
+  color: #0F2744
+}
+
+.contact-action.whatsapp-action {
+  background: #0F2744;
+  border-color: #0F2744;
+  color: #FFFFFF
+}
+
+.contact-action.whatsapp-action:not(.unavailable):hover {
+  background: #0F2744;
+  border-color: #0F2744;
+  color: #FFFFFF;
+  box-shadow: 0 10px 28px rgba(15, 39, 68, .24)
+}
+
+.contact-action {
+  border-color: transparent;
+  cursor: pointer;
+  filter: drop-shadow(0 0 12px rgba(189, 227, 255, 1)) drop-shadow(0 0 4px rgba(143, 200, 255, 1));
+  box-shadow:
+    0 0 20px rgba(41, 151, 255, .82),
+    0 8px 24px rgba(15, 39, 68, .16)
+}
+
+.contact-action.email-action:hover,
+.contact-action.whatsapp-action:not(.unavailable):hover {
+  border-color: transparent;
+  filter: drop-shadow(0 0 16px rgba(189, 227, 255, 1)) drop-shadow(0 0 5px rgba(143, 200, 255, 1));
+  box-shadow:
+    0 0 26px rgba(41, 151, 255, .95),
+    0 12px 30px rgba(15, 39, 68, .2)
+}
+
+.footer-note span {
+  color: #0071E3
+}
+
+@media (min-width: 761px) {
+  .solution-card.solution-custom {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(280px, .85fr) minmax(0, 1.15fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px 30px;
+    min-height: 300px;
+    padding: 24px 28px 0
+  }
+
+  .solution-card.solution-custom>.solution-copy {
+    grid-column: 1;
+    grid-row: 1;
+    max-width: 520px;
+    min-height: 0
+  }
+
+  .solution-card.solution-custom>.custom-visual {
+    grid-column: 2;
+    grid-row: 1;
+    width: 100%;
+    height: 180px;
+    margin: 0
+  }
+
+  .solution-card.solution-custom>.solution-foot {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%
+  }
+}
+
+@media (max-width: 1000px) {
+  .header-inner {
+    width: calc(100% - 60px)
+  }
+}
+
+@media (max-width: 900px) and (min-width: 761px) {
+  .process-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr))
+  }
+}
+
+@media (max-width: 760px) {
+  .hero {
+    min-height: calc(100vh - 60px);
+    min-height: calc(100svh - 60px)
+  }
+
+  .header-inner {
+    width: calc(100% - 40px)
+  }
+
+  .hero-actions {
+    flex-wrap: wrap;
+    gap: 8px
+  }
+
+  .hero-actions>.button {
+    white-space: nowrap
+  }
+
+  .process-card>p {
+    font-size: 11px
+  }
+
+  .process-card li {
+    font-size: 10px;
+    line-height: 1.4
+  }
+
+  .section-faq {
+    padding-bottom: 56px
+  }
+
+  .faq-layout {
+    grid-template-rows: auto auto
+  }
+
+  .faq-list {
+    height: auto;
+    min-height: 0;
+    overflow: visible
+  }
+}
+
+@media (max-width: 390px) {
+  .header-inner {
+    width: calc(100% - 32px)
   }
 }
